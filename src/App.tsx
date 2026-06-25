@@ -573,22 +573,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* AI Lab Specs */}
-        <div className="ailab-card">
-          <div className="ailab-title">Recommended AI training lab specs</div>
-          <div className="ailab-specs">
-            {data.aiSpecs.map((spec, idx) => (
-              <Editable
-                key={idx}
-                value={spec}
-                onChange={(v) =>
-                  setData((d) => ({ ...d, aiSpecs: d.aiSpecs.map((s, i) => (i === idx ? v : s)) }))
-                }
-                className="ailab-spec-chip"
-              />
-            ))}
-          </div>
-        </div>
+  
       </div>
     </div>
   );
