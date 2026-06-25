@@ -75,7 +75,7 @@ const initialData: { sections: Section[] } = {
       title: "4. Student Comfort & Pantry",
       items: [
         { id: "sc1", label: "Air Conditioners (AC)", note: "Sized correctly for 30 people + computers", priority: "must", qty: 3, unitPrice: 45000, link: "" },
-        { id: "sc2", label: "Ceiling fans & Wall clock", note: "Essential backups / utility", priority: "must", qty: 4, unitPrice: 2000, link: "" },
+        { id: "sc2", label: "Ceiling fans & Wall clock", note: "Essential backups / utility", priority: "must", qty: 5, unitPrice: 2000, link: "" },
         { id: "sc3", label: "Water purifier & Dispenser", note: "RO / UV unit with hot & cold option", priority: "must", qty: 1, unitPrice: 12000, link: "" },
         { id: "sc4", label: "Electric kettle", note: "For tea, coffee, and quick refreshments", priority: "must", qty: 1, unitPrice: 1500, link: "" },
         { id: "sc5", label: "Pantry supplies", note: "Cups, glasses, water bottles, coffee/tea sachets", priority: "must", qty: 1, unitPrice: 3000, link: "" },
