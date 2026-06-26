@@ -40,8 +40,6 @@ interface AppData {
   aiSpecs: string[];
 }
 
-// ── Empty initial data (backend is source of truth) ───────────────────────
-
 const emptyData: AppData = {
   instituteName: "Institute Name",
   instituteTag: "Tagline",
@@ -62,16 +60,107 @@ function fmt(n: number): string {
   return "₹" + Math.round(v).toLocaleString("en-IN");
 }
 
-// ── Pencil icon ────────────────────────────────────────────────────────────
-function PencilIcon() {
+// ── Icons ──────────────────────────────────────────────────────────────────
+
+function IconEdit() {
   return (
-    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M11.498 1.999a1.5 1.5 0 0 1 2.121 0l.383.382a1.5 1.5 0 0 1 0 2.122L5.06 13.443l-3.06.617.617-3.061L11.498 2zm-1.06 1.06L2.5 10.998l-.308 1.53 1.53-.308 7.939-7.939-1.222-1.222z" fill="currentColor"/>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
     </svg>
   );
 }
 
-// ── Settings Modal (institute info + budget) ───────────────────────────────
+function IconTrash() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="3 6 5 6 21 6"/>
+      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+      <path d="M10 11v6M14 11v6"/>
+      <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+    </svg>
+  );
+}
+
+function IconSettings() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+  );
+}
+
+function IconPrint() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="6 9 6 2 18 2 18 9"/>
+      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+      <rect x="6" y="14" width="12" height="8"/>
+    </svg>
+  );
+}
+
+function IconDownload() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/>
+      <line x1="12" y1="15" x2="12" y2="3"/>
+    </svg>
+  );
+}
+
+function IconUpload() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="17 8 12 3 7 8"/>
+      <line x1="12" y1="3" x2="12" y2="15"/>
+    </svg>
+  );
+}
+
+function IconRefresh() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="1 4 1 10 7 10"/>
+      <path d="M3.51 15a9 9 0 1 0 .49-3.51"/>
+    </svg>
+  );
+}
+
+function IconPlus() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"/>
+      <line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+  );
+}
+
+function IconChevron({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+      style={{ transform: open ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s" }}
+    >
+      <polyline points="9 18 15 12 9 6"/>
+    </svg>
+  );
+}
+
+function IconLink() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+    </svg>
+  );
+}
+
+// ── Settings Modal ─────────────────────────────────────────────────────────
 
 interface SettingsModalProps {
   data: AppData;
@@ -104,7 +193,7 @@ function SettingsModal({ data, onSave, onClose }: SettingsModalProps) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <span className="modal-title">Document settings</span>
+          <span className="modal-title">Document Settings</span>
           <button className="modal-close" onClick={onClose}>✕</button>
         </div>
         <div className="modal-body">
@@ -113,7 +202,7 @@ function SettingsModal({ data, onSave, onClose }: SettingsModalProps) {
             <input className="field-input" value={form.instituteName} onChange={e => setForm(f => ({ ...f, instituteName: e.target.value }))} />
           </div>
           <div className="field-group">
-            <label className="field-label">Institute tagline</label>
+            <label className="field-label">Tagline</label>
             <input className="field-input" value={form.instituteTag} onChange={e => setForm(f => ({ ...f, instituteTag: e.target.value }))} />
           </div>
           <div className="field-group">
@@ -145,13 +234,16 @@ function SettingsModal({ data, onSave, onClose }: SettingsModalProps) {
 }
 
 // ── Item Edit Modal ────────────────────────────────────────────────────────
+// FIX: receives an optional `isNew` flag and a `onConfirm` callback so that
+// when adding, nothing is committed to state until the user clicks "Save item".
 
 interface ItemEditModalProps {
   item: Item;
-  onSave: (patch: Partial<Item>) => void;
+  isNew?: boolean;
+  onConfirm: (patch: Partial<Item>) => void;
   onClose: () => void;
 }
-function ItemEditModal({ item, onSave, onClose }: ItemEditModalProps) {
+function ItemEditModal({ item, isNew = false, onConfirm, onClose }: ItemEditModalProps) {
   const [form, setForm] = useState({
     label: item.label,
     note: item.note,
@@ -162,7 +254,7 @@ function ItemEditModal({ item, onSave, onClose }: ItemEditModalProps) {
   });
 
   function handleSave() {
-    onSave({
+    onConfirm({
       label: form.label,
       note: form.note,
       qty: Number(form.qty) || 0,
@@ -177,17 +269,17 @@ function ItemEditModal({ item, onSave, onClose }: ItemEditModalProps) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <span className="modal-title">Edit item</span>
+          <span className="modal-title">{isNew ? "Add new item" : "Edit item"}</span>
           <button className="modal-close" onClick={onClose}>✕</button>
         </div>
         <div className="modal-body">
           <div className="field-group">
             <label className="field-label">Item name</label>
-            <input className="field-input" value={form.label} onChange={e => setForm(f => ({ ...f, label: e.target.value }))} />
+            <input className="field-input" placeholder="e.g. Laptop, Projector…" value={form.label} onChange={e => setForm(f => ({ ...f, label: e.target.value }))} />
           </div>
           <div className="field-group">
             <label className="field-label">Note / description</label>
-            <input className="field-input" value={form.note} onChange={e => setForm(f => ({ ...f, note: e.target.value }))} />
+            <input className="field-input" placeholder="Optional specs or notes" value={form.note} onChange={e => setForm(f => ({ ...f, note: e.target.value }))} />
           </div>
           <div className="field-row">
             <div className="field-group">
@@ -201,7 +293,7 @@ function ItemEditModal({ item, onSave, onClose }: ItemEditModalProps) {
           </div>
           <div className="field-group">
             <label className="field-label">Link (optional)</label>
-            <input type="url" className="field-input" placeholder="https://..." value={form.link} onChange={e => setForm(f => ({ ...f, link: e.target.value }))} />
+            <input type="url" className="field-input" placeholder="https://…" value={form.link} onChange={e => setForm(f => ({ ...f, link: e.target.value }))} />
           </div>
           <div className="field-group">
             <label className="field-label">Priority</label>
@@ -219,14 +311,14 @@ function ItemEditModal({ item, onSave, onClose }: ItemEditModalProps) {
         </div>
         <div className="modal-footer">
           <button className="btn-ghost" onClick={onClose}>Cancel</button>
-          <button className="btn-primary" onClick={handleSave}>Save item</button>
+          <button className="btn-primary" onClick={handleSave}>{isNew ? "Add item" : "Save item"}</button>
         </div>
       </div>
     </div>
   );
 }
 
-// ── Section Title Edit (inline, triggered by pencil) ───────────────────────
+// ── Section Title Edit ─────────────────────────────────────────────────────
 
 interface SectionTitleEditorProps {
   value: string;
@@ -252,7 +344,7 @@ function SectionTitleEditor({ value, onSave, onCancel }: SectionTitleEditorProps
   );
 }
 
-// ── Loading Skeleton ───────────────────────────────────────────────────────
+// ── Skeleton ───────────────────────────────────────────────────────────────
 
 function Skeleton() {
   return (
@@ -273,7 +365,7 @@ function Skeleton() {
   );
 }
 
-// ── Main Component ─────────────────────────────────────────────────────────
+// ── Main App ───────────────────────────────────────────────────────────────
 
 export default function App() {
   const [data, setData] = useState<AppData>(emptyData);
@@ -286,12 +378,13 @@ export default function App() {
 
   // Modals
   const [showSettings, setShowSettings] = useState(false);
-  const [editingItem, setEditingItem] = useState<{ sectionId: string; item: Item } | null>(null);
+  // editingItem.item is the current saved item (for edits) or a blank draft (for new)
+  const [editingItem, setEditingItem] = useState<{ sectionId: string; item: Item; isNew: boolean } | null>(null);
   const [editingSectionId, setEditingSectionId] = useState<string | null>(null);
 
   const fileInput = useRef<HTMLInputElement>(null);
 
-  // ── Load from API ──
+  // ── Load ──
   useEffect(() => {
     fetch(`${API_BASE}/checklists/${CHECKLIST_SLUG}`)
       .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
@@ -365,16 +458,29 @@ export default function App() {
     }));
   }
 
-  function addItem(sectionId: string) {
-    const id = nextId("i");
-    const newItem: Item = { id, label: "New item", note: "", priority: "must", qty: 1, unitPrice: 0, link: "" };
+  // FIX: open modal with a blank draft; nothing is added to state until onConfirm
+  function openAddItem(sectionId: string) {
+    const draft: Item = {
+      id: nextId("i"),
+      label: "",
+      note: "",
+      priority: "must",
+      qty: 1,
+      unitPrice: 0,
+      link: "",
+    };
+    setEditingItem({ sectionId, item: draft, isNew: true });
+  }
+
+  // FIX: separate confirm handler that actually inserts the item
+  function confirmAddItem(sectionId: string, id: string, patch: Partial<Item>) {
+    const newItem: Item = { id, label: "New item", note: "", priority: "must", qty: 1, unitPrice: 0, link: "", ...patch };
     setData((d) => ({
       ...d,
       sections: d.sections.map((s) =>
         s.id !== sectionId ? s : { ...s, items: [...s.items, newItem] }
       ),
     }));
-    setEditingItem({ sectionId, item: newItem });
   }
 
   function removeItem(sectionId: string, itemId: string) {
@@ -435,7 +541,6 @@ export default function App() {
     e.target.value = "";
   }
 
-  // ── Loading / error ──
   if (!loaded) return <Skeleton />;
   if (loadError && allItems.length === 0) {
     return (
@@ -448,7 +553,6 @@ export default function App() {
     );
   }
 
-  // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="app">
 
@@ -463,7 +567,15 @@ export default function App() {
       {editingItem && (
         <ItemEditModal
           item={editingItem.item}
-          onSave={(patch) => patchItem(editingItem.sectionId, editingItem.item.id, patch)}
+          isNew={editingItem.isNew}
+          onConfirm={(patch) => {
+            if (editingItem.isNew) {
+              // Only add to state when user confirms
+              confirmAddItem(editingItem.sectionId, editingItem.item.id, patch);
+            } else {
+              patchItem(editingItem.sectionId, editingItem.item.id, patch);
+            }
+          }}
           onClose={() => setEditingItem(null)}
         />
       )}
@@ -473,9 +585,11 @@ export default function App() {
         <div className="header-inner">
           <div className="header-left">
             <div className="brand-block">
-              <span className="brand-name">{data.instituteName}</span>
-              <span className="brand-sep">·</span>
-              <span className="brand-tag">{data.instituteTag}</span>
+              <div className="brand-logo">{data.instituteName.charAt(0)}</div>
+              <div>
+                <div className="brand-name">{data.instituteName}</div>
+                <div className="brand-tag">{data.instituteTag}</div>
+              </div>
             </div>
             <div className="doc-block">
               <h1 className="doc-title">{data.docTitle}</h1>
@@ -484,17 +598,25 @@ export default function App() {
           </div>
           <div className="header-right no-print">
             <span className={`save-indicator ${saveStatus}`}>
-              {saveStatus === "saving" && <><span className="spinner" /> Saving…</>}
+              {saveStatus === "saving" && <><span className="spinner" />Saving…</>}
               {saveStatus === "saved" && "✓ Saved"}
               {saveStatus === "error" && "✕ Error"}
             </span>
             <button className="hdr-btn" onClick={() => setShowSettings(true)}>
-              <PencilIcon /> Settings
+              <IconSettings /> Settings
             </button>
-            <button className="hdr-btn" onClick={() => window.print()}>Print</button>
-            <button className="hdr-btn" onClick={exportJSON}>Export</button>
-            <button className="hdr-btn" onClick={() => fileInput.current?.click()}>Import</button>
-            <button className="hdr-btn hdr-btn-danger" onClick={resetAll}>Reset</button>
+            <button className="hdr-btn" onClick={() => window.print()}>
+              <IconPrint /> Print
+            </button>
+            <button className="hdr-btn" onClick={exportJSON}>
+              <IconDownload /> Export
+            </button>
+            <button className="hdr-btn" onClick={() => fileInput.current?.click()}>
+              <IconUpload /> Import
+            </button>
+            <button className="hdr-btn hdr-btn-danger" onClick={resetAll}>
+              <IconRefresh /> Reset
+            </button>
             <input ref={fileInput} type="file" accept="application/json" onChange={importJSON} hidden />
           </div>
         </div>
@@ -535,7 +657,7 @@ export default function App() {
         <div className="stat-item stat-wide no-print">
           <div className="stat-label">Procurement progress</div>
           <div className="progress-bar-wrap">
-            <div className="progress-bar-fill fill-teal" style={{ width: progressPct + "%" }} />
+            <div className="progress-bar-fill fill-violet" style={{ width: progressPct + "%" }} />
           </div>
           <div className="progress-meta">{progressPct}% complete · {checkedCount}/{allItems.length} items</div>
         </div>
@@ -561,7 +683,6 @@ export default function App() {
 
       {/* ── Content ── */}
       <main className="content">
-
         {data.sections.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">📋</div>
@@ -578,11 +699,9 @@ export default function App() {
 
             return (
               <div key={section.id} className="section-block">
-
-                {/* Section head */}
                 <div className="section-head">
                   <button className="collapse-btn" onClick={() => toggleSection(section.id)}>
-                    <span className={`chevron ${isOpen ? "open" : ""}`}>▶</span>
+                    <IconChevron open={isOpen} />
                   </button>
 
                   {isEditingTitle ? (
@@ -599,7 +718,7 @@ export default function App() {
                         title="Rename section"
                         onClick={() => setEditingSectionId(section.id)}
                       >
-                        <PencilIcon />
+                        <IconEdit />
                       </button>
                     </>
                   )}
@@ -610,12 +729,15 @@ export default function App() {
                   </div>
 
                   <div className="section-acts no-print">
-                    <button className="act-btn" onClick={() => addItem(section.id)}>+ Add item</button>
-                    <button className="act-btn act-danger" onClick={() => removeSection(section.id)}>Remove</button>
+                    <button className="act-btn act-add" onClick={() => openAddItem(section.id)}>
+                      <IconPlus /> Add item
+                    </button>
+                    <button className="act-btn act-danger" onClick={() => removeSection(section.id)}>
+                      <IconTrash />
+                    </button>
                   </div>
                 </div>
 
-                {/* Items */}
                 {isOpen && (
                   <div className="section-body">
                     {visibleItems.length > 0 && (
@@ -635,14 +757,11 @@ export default function App() {
                       const rowTotal = item.qty * item.unitPrice;
                       return (
                         <div key={item.id} className={`item-row ${isDone ? "row-done" : ""}`}>
-
-                          {/* Checkbox */}
                           <label className="cb-wrap">
                             <input type="checkbox" checked={isDone} onChange={() => toggleCheck(item.id)} />
                             <span className="cb-box" />
                           </label>
 
-                          {/* Info */}
                           <div className="item-info">
                             <div className="item-name-row">
                               <span className={`item-name ${isDone ? "name-done" : ""}`}>{item.label}</span>
@@ -653,31 +772,26 @@ export default function App() {
                             {item.note && <div className="item-note">{item.note}</div>}
                           </div>
 
-                          {/* Qty */}
                           <div className="d-desk"><span className="cell">{item.qty}</span></div>
-
-                          {/* Unit price */}
                           <div className="d-desk"><span className="cell">{fmt(item.unitPrice)}</span></div>
-
-                          {/* Total */}
                           <div className="d-desk"><span className="cell cell-bold">{fmt(rowTotal)}</span></div>
 
-                          {/* Link */}
                           <div className="d-desk">
                             {item.link
-                              ? <a href={item.link} target="_blank" rel="noreferrer" className="item-link">View ↗</a>
+                              ? <a href={item.link} target="_blank" rel="noreferrer" className="item-link"><IconLink /> View</a>
                               : <span className="cell-empty">—</span>}
                           </div>
 
-                          {/* Actions */}
                           <div className="row-acts no-print">
                             <button
                               className="row-edit-btn"
-                              onClick={() => setEditingItem({ sectionId: section.id, item })}
+                              onClick={() => setEditingItem({ sectionId: section.id, item, isNew: false })}
                             >
-                              <PencilIcon /> Edit
+                              <IconEdit /> Edit
                             </button>
-                            <button className="row-del-btn" onClick={() => removeItem(section.id, item.id)}>×</button>
+                            <button className="row-del-btn" onClick={() => removeItem(section.id, item.id)}>
+                              <IconTrash />
+                            </button>
                           </div>
                         </div>
                       );
@@ -687,7 +801,7 @@ export default function App() {
                       <div className="empty-section">
                         {filter !== "all"
                           ? `No ${filter === "must" ? "must-have" : "nice-to-have"} items here.`
-                          : <>No items yet — <button className="text-btn" onClick={() => addItem(section.id)}>add one</button></>}
+                          : <><button className="text-btn" onClick={() => openAddItem(section.id)}>+ Add the first item</button></>}
                       </div>
                     )}
                   </div>
@@ -697,9 +811,10 @@ export default function App() {
           })
         )}
 
-        <button className="add-section-btn no-print" onClick={addSection}>+ Add section</button>
+        <button className="add-section-btn no-print" onClick={addSection}>
+          <IconPlus /> Add section
+        </button>
 
-        {/* Timeline */}
         {data.timeline.length > 0 && (
           <div className="timeline-block">
             <div className="timeline-heading">Procurement timeline</div>
@@ -715,7 +830,6 @@ export default function App() {
             </div>
           </div>
         )}
-
       </main>
     </div>
   );
