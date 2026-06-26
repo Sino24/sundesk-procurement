@@ -402,7 +402,6 @@ export default function App() {
   }
 
   function removeSection(sectionId: string) {
-    if (!confirm("Remove this section and all its items?")) return;
     setData((d) => ({ ...d, sections: d.sections.filter((s) => s.id !== sectionId) }));
   }
 
@@ -410,7 +409,6 @@ export default function App() {
   function toggleSection(id: string) { setExpandedSections((e) => ({ ...e, [id]: !e[id] })); }
 
   function resetAll() {
-    if (!confirm("Reset to server defaults? This clears everything.")) return;
     fetch(`${API_BASE}/checklists/${CHECKLIST_SLUG}/reset`, { method: "POST" })
       .then((r) => r.json())
       .then((doc) => { const { checked: c, ...rest } = doc; setData(rest); setChecked(c || {}); })
