@@ -585,7 +585,6 @@ export default function App() {
         <div className="header-inner">
           <div className="header-left">
             <div className="brand-block">
-              <div className="brand-logo">{data.instituteName.charAt(0)}</div>
               <div>
                 <div className="brand-name">{data.instituteName}</div>
                 <div className="brand-tag">{data.instituteTag}</div>
