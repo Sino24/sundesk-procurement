@@ -1,7 +1,8 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import "./App.css";
 
-const STORAGE_KEY = "ulearns-checklist-data";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+const CHECKLIST_SLUG = "default";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -45,7 +46,7 @@ interface EditState {
   link: string;
 }
 
-// ── Initial data ─────────────────────────────────────────────────────────
+// ── Initial data (fallback if the API is unreachable on first load) ───────
 
 const initialData: AppData = {
   instituteName: "ULearns",
@@ -183,47 +184,68 @@ function Editable({
 // ── Component ──────────────────────────────────────────────────────────────
 
 export default function App() {
-  const [data, setData] = useState<AppData>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? (JSON.parse(saved) as AppData) : initialData;
-    } catch {
-      return initialData;
-    }
-  });
-  const [checked, setChecked] = useState<Record<string, boolean>>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY + "-checked");
-      return saved ? JSON.parse(saved) : {};
-    } catch {
-      return {};
-    }
-  });
-  const [saveStatus, setSaveStatus] = useState<"idle" | "saved">("idle");
+  const [data, setData] = useState<AppData>(initialData);
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const [loaded, setLoaded] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editState, setEditState] = useState<EditState>({ qty: 0, unitPrice: 0, link: "" });
   const [filter, setFilter] = useState<"all" | "must" | "nice">("all");
   const fileInput = useRef<HTMLInputElement>(null);
 
-  // ── Persist to localStorage ──
+  // ── Load from API on mount ──
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      setSaveStatus("saved");
-      const t = setTimeout(() => setSaveStatus("idle"), 1200);
-      return () => clearTimeout(t);
-    } catch {
-      // storage unavailable (e.g. private browsing quota) — fail silently
-    }
-  }, [data]);
+    fetch(`${API_BASE}/checklists/${CHECKLIST_SLUG}`)
+      .then((r) => {
+        if (!r.ok) throw new Error(`API returned ${r.status}`);
+        return r.json();
+      })
+      .then((doc) => {
+        const { checked: savedChecked, ...rest } = doc;
+        setData(rest as AppData);
+        setChecked(savedChecked || {});
+      })
+      .catch((err) => {
+        console.error("Failed to load checklist from API, using local defaults:", err);
+      })
+      .finally(() => setLoaded(true));
+  }, []);
 
+  // ── Save the whole checklist whenever data changes (debounced) ──
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY + "-checked", JSON.stringify(checked));
-    } catch {
-      // ignore
-    }
-  }, [checked]);
+    if (!loaded) return;
+    setSaveStatus("saving");
+    const t = setTimeout(() => {
+      fetch(`${API_BASE}/checklists/${CHECKLIST_SLUG}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+        .then((r) => {
+          if (!r.ok) throw new Error(`API returned ${r.status}`);
+          setSaveStatus("saved");
+          setTimeout(() => setSaveStatus("idle"), 1200);
+        })
+        .catch((err) => {
+          console.error("Save failed:", err);
+          setSaveStatus("error");
+        });
+    }, 600); // debounce: wait for typing to pause before saving
+    return () => clearTimeout(t);
+  }, [data, loaded]);
+
+  // ── Save checked state separately (debounced) ──
+  useEffect(() => {
+    if (!loaded) return;
+    const t = setTimeout(() => {
+      fetch(`${API_BASE}/checklists/${CHECKLIST_SLUG}/checked`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ checked }),
+      }).catch((err) => console.error("Checked-save failed:", err));
+    }, 400);
+    return () => clearTimeout(t);
+  }, [checked, loaded]);
 
   // ── Derived ──
   const allItems = useMemo(() => data.sections.flatMap((s) => s.items), [data]);
@@ -313,11 +335,18 @@ export default function App() {
   }
 
   function resetAll() {
-    if (!confirm("Reset to the default checklist? This clears everything saved in this browser.")) return;
-    localStorage.removeItem(STORAGE_KEY);
-    localStorage.removeItem(STORAGE_KEY + "-checked");
-    setData(initialData);
-    setChecked({});
+    if (!confirm("Reset to the default checklist? This clears everything saved on the server.")) return;
+    fetch(`${API_BASE}/checklists/${CHECKLIST_SLUG}/reset`, { method: "POST" })
+      .then((r) => r.json())
+      .then((doc) => {
+        const { checked: savedChecked, ...rest } = doc;
+        setData(rest as AppData);
+        setChecked(savedChecked || {});
+      })
+      .catch((err) => {
+        console.error("Reset failed:", err);
+        alert("Couldn't reset — check your connection and try again.");
+      });
   }
 
   function exportJSON() {
@@ -409,7 +438,9 @@ export default function App() {
           ))}
         </div>
         <div className="action-group">
-          <span className={`save-indicator ${saveStatus}`}>{saveStatus === "saved" ? "Saved" : ""}</span>
+          <span className={`save-indicator ${saveStatus}`}>
+            {saveStatus === "saving" ? "Saving…" : saveStatus === "saved" ? "Saved" : saveStatus === "error" ? "Save failed" : ""}
+          </span>
           <button className="pill-btn" onClick={() => window.print()}>Print</button>
           <button className="pill-btn" onClick={exportJSON}>Export</button>
           <button className="pill-btn" onClick={() => fileInput.current?.click()}>Import</button>
@@ -572,8 +603,6 @@ export default function App() {
             ))}
           </div>
         </div>
-
-  
       </div>
     </div>
   );
